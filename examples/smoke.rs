@@ -78,6 +78,8 @@ async fn instantiate(
     preview2::wasi::cli_base::stdout::add_to_linker(&mut linker, |x| x)?;
     preview2::wasi::cli_base::stderr::add_to_linker(&mut linker, |x| x)?;
 
+    Smoke::add_to_linker(&mut linker, |x| x)?;
+
     let mut store = Store::new(&ENGINE, wasi_ctx);
 
     let (testreactor, _instance) =
