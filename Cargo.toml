@@ -3,17 +3,38 @@ name = "wit-wasm"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = [".", "xtask"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+
+[workspace.dependencies.wit-bindgen]
+git = "https://github.com/bytecodealliance/wit-bindgen"
+version = "0.7.0"
+
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = "1.0"
+getrandom = { version = "0.2.10" }
+wit-component = "0.11.0"
 
 [dependencies.wit-bindgen]
-git = "https://github.com/bytecodealliance/wit-bindgen"
-version = "0.7.0"
+workspace = true
 
 [dev-dependencies.wasmtime]
 version = "11"
 features = ["component-model"]
 git = 'https://github.com/bytecodealliance/wasmtime'
+
+[dev-dependencies]
+wasmtime-wasi = { git = "https://github.com/bytecodealliance/wasmtime" } # has wasi linker too
+lazy_static = "1.4.0"
+tokio = { version = "1.11.0", features = ["rt", "macros"] }
+async-trait = "0.1.68"
+
+# [patch.crates-io]
+# wasmtime = { git = 'https://github.com/bytecodealliance/wasmtime' } # v11 is not yet published
