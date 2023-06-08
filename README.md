@@ -20,6 +20,13 @@ $ cargo run --example smoke
 
 ### Refs:
 
+Main inspiration for this example:
+[https://github.com/bytecodealliance/wasmtime/blob/afd9aced3b91ae4eab7c72e0ed4cc241ef93dc89/crates/test-programs/tests/reactor.rs](https://github.com/bytecodealliance/wasmtime/blob/afd9aced3b91ae4eab7c72e0ed4cc241ef93dc89/crates/test-programs/tests/reactor.rs)
+
 [https://github.com/bytecodealliance/wit-bindgen/tree/main](https://github.com/bytecodealliance/wit-bindgen/tree/main)
 
+Wit syntax:
 [https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md](https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md)
+
+Smoke Wit:
+[https://github.com/bytecodealliance/wit-bindgen/blob/e69cf5db8754f829637e25491c560ec0d9728852/tests/runtime/smoke/world.wit](https://github.com/bytecodealliance/wit-bindgen/blob/e69cf5db8754f829637e25491c560ec0d9728852/tests/runtime/smoke/world.wit)

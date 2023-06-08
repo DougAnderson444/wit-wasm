@@ -106,12 +106,7 @@ async fn main() -> wasmtime::Result<()> {
     .await?;
 
     command.call_think(&mut store).await?;
-    // .map_err(|()| anyhow::anyhow!("command returned with failing exit status"));
 
-    // let (exports, _) = Smoke::instantiate(&mut store, &component, &linker)?;
-    // let res = exports.call_think(&mut *store, "starting string")?;
-
-    // eprintln!("res: {:?}", res);
     // assert!(store.data().hit);
 
     Ok(())
