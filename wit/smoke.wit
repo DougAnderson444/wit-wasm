@@ -1,11 +1,11 @@
 package mypackage:smoke
 
 interface imports {
-  thunk: func()
+  thunk: func(msg: string) -> string
 }
 
 world smoke {
   import imports
 
-  export think: func()
+  export think: func(msg: string) -> string
 }

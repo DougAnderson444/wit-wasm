@@ -4,7 +4,6 @@ use wasmtime::component::{Component, Linker};
 use wasmtime::{Config, Engine, Store};
 use wasmtime_wasi::preview2::{self, Table, WasiCtx, WasiCtxBuilder, WasiView};
 
-// wasmtime::component::bindgen!("smoke" in "wit");
 wasmtime::component::bindgen!({
     path: "wit",
     world: "smoke",
@@ -55,10 +54,11 @@ impl WasiView for MyImports {
 
 #[async_trait::async_trait]
 impl mypackage::smoke::imports::Host for MyImports {
-    async fn thunk(&mut self) -> Result<()> {
+    async fn thunk(&mut self, msg: String) -> Result<String> {
         self.hit = true;
         println!("in the host");
-        Ok(())
+        let new_msg = format!("{} {}", msg, "from the host");
+        Ok(new_msg)
     }
 }
 
@@ -107,9 +107,11 @@ async fn main() -> wasmtime::Result<()> {
     )
     .await?;
 
-    command.call_think(&mut store).await?;
+    let out = command.call_think(&mut store, "original message").await?;
 
-    // assert!(store.data().hit);
+    println!("{out}");
+
+    assert!(store.data().hit);
 
     Ok(())
 }
