@@ -1,33 +1,25 @@
-Refs:
-https://github.com/bytecodealliance/wit-bindgen/tree/main
-
-https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
-
 ## Build
-
-#### Short way:
 
 ```bash
 cargo xtask dist
+
+# 1. runs `cargo build --target wasm32-wasi`
+# 2. adapts to Compoennt model using `wasi_snapshot_preview1`
+# 3. copies to dist folder for use
 ```
 
-The xtask will build the component, adpat it to preview2, and copy it to the `dist` folder.
+The xtask will build the component, adapt it to preview2, and copy it to the `dist` folder for useby the host.
 
-#### Long way:
-
-```bash
-cargo build --target wasm32-wasi
-# if no wasi functionality is needed, you can alternatively do:
-cargo build --target wasm32-unknown-unknown
-
-wasm-tools component new ./target/wasm32-wasi/debug/wit_wasm.wasm --adapt wasi_snapshot_preview1=./wasi_preview1_component_adapter.wasm -o dist/smoke.wasm
-
-```
-
-## Example Usage
+## Use
 
 To see the component used in action, run the example binary:
 
 ```bash
 cargo run --example smoke
 ```
+
+### Refs:
+
+[https://github.com/bytecodealliance/wit-bindgen/tree/main](https://github.com/bytecodealliance/wit-bindgen/tree/main)
+
+[https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md](https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md)
