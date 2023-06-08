@@ -1,11 +1,11 @@
 ## Build
 
 ```bash
-cargo xtask dist
+$ cargo xtask dist
 
 # 1. runs `cargo build --target wasm32-wasi`
-# 2. adapts to Compoennt model using `wasi_snapshot_preview1`
-# 3. copies to dist folder for use
+# 2. adapts wasm module to Component model using `wasi_snapshot_preview1`
+# 3. copies Component to dist folder for use
 ```
 
 The xtask will build the component, adapt it to preview2, and copy it to the `dist` folder for useby the host.
@@ -15,7 +15,7 @@ The xtask will build the component, adapt it to preview2, and copy it to the `di
 To see the component used in action, run the example binary:
 
 ```bash
-cargo run --example smoke
+$ cargo run --example smoke
 ```
 
 ### Refs:
