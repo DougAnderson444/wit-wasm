@@ -64,7 +64,7 @@ fn dist_binary(out_name: String) -> Result<(), DynError> {
     .collect();
 
     let src = project_root().join(path);
-    eprintln!("read src: {:?}", src);
+    eprintln!("Source Read: {:?}", src);
     let module = fs::read(src).unwrap();
 
     // read  ./wasi_preview1_component_adapter.wasm from same directory as this binary's Manifest file (Cargo.toml)

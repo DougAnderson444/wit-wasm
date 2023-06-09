@@ -3,8 +3,8 @@ struct Exports;
 
 impl Smoke for Exports {
     fn think(msg: String) -> String {
-        let new_msg: &str = &format!("{} {}", msg, "from the guest")[..];
-        mypackage::smoke::imports::thunk(new_msg)
+        let new_msg = format!("{} [{}]", msg, "in the guest");
+        mypackage::smoke::imports::thunk(&new_msg)
     }
 }
 

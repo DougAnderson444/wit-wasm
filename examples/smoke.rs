@@ -57,7 +57,7 @@ impl mypackage::smoke::imports::Host for MyImports {
     async fn thunk(&mut self, msg: String) -> Result<String> {
         self.hit = true;
         println!("in the host");
-        let new_msg = format!("{} {}", msg, "from the host");
+        let new_msg = format!("{} ({})", msg, "from the host");
         Ok(new_msg)
     }
 }
