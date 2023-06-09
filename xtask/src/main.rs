@@ -16,10 +16,8 @@ fn main() {
 
 fn try_main() -> Result<(), DynError> {
     let task = env::args().nth(1);
-    // second arg is the name of the output file, defaults to "out" if none specified
-    let out_name = env::args().nth(2).unwrap_or_else(|| "wit_wasm".to_string());
     match task.as_deref() {
-        Some("dist") => dist(out_name)?,
+        Some("dist") => dist()?,
         _ => print_help(),
     }
     Ok(())
@@ -29,25 +27,33 @@ fn print_help() {
     eprintln!(
         "Tasks:
 
-dist            builds application and adapts wasm module to component model
+dist [release]           builds application and adapts wasm module to component model
 "
     )
 }
 
-fn dist(out_name: String) -> Result<(), DynError> {
+fn dist() -> Result<(), DynError> {
     let _ = fs::remove_dir_all(dist_dir());
     fs::create_dir_all(dist_dir())?;
 
-    dist_binary(out_name)?;
+    // get the CARGO_PKG_NAME of the workspace root project (not this xtask project)
+    let out_name = kabob_to_snake_case(get_workspace_pkg_name());
 
-    Ok(())
-}
+    // 2nd arg if available should be "release", if not release or not present, then set to "debug"
+    let target = match env::args().nth(2).unwrap_or_else(|| "debug".to_string()) {
+        ref s if s == "release" => "release",
+        _ => "debug",
+    };
 
-fn dist_binary(out_name: String) -> Result<(), DynError> {
+    let profile = match target {
+        "release" => "--release",
+        _ => "",
+    };
+
     let cargo = env::var("CARGO").unwrap_or_else(|_| "cargo".to_string());
     let status = Command::new(cargo)
         .current_dir(project_root())
-        .args(["build", "--target", "wasm32-wasi"]) // "--release",
+        .args(["build", profile, "--target", "wasm32-wasi"])
         .status()?;
 
     if !status.success() {
@@ -57,7 +63,7 @@ fn dist_binary(out_name: String) -> Result<(), DynError> {
     let path: PathBuf = [
         r"target",
         "wasm32-wasi",
-        "debug",
+        target,
         &format!("{out_name}.wasm"),
     ]
     .iter()
@@ -98,4 +104,33 @@ fn project_root() -> PathBuf {
 
 fn dist_dir() -> PathBuf {
     project_root().join("dist")
+}
+
+fn workspace_dir() -> PathBuf {
+    let output = std::process::Command::new(env!("CARGO"))
+        .arg("locate-project")
+        .arg("--workspace")
+        .arg("--message-format=plain")
+        .output()
+        .unwrap()
+        .stdout;
+    let cargo_path = Path::new(std::str::from_utf8(&output).unwrap().trim());
+    cargo_path.parent().unwrap().to_path_buf()
+}
+
+// get Cargo.toml from workspace_dir and read the CARGO_PKG_NAME from it
+fn get_workspace_pkg_name() -> String {
+    let cargo_path = workspace_dir().join("Cargo.toml");
+    let cargo_toml = fs::read_to_string(cargo_path).unwrap();
+    let cargo_toml: toml::Value = toml::from_str(&cargo_toml).unwrap();
+    let cargo_pkg_name = cargo_toml["package"]["name"].as_str().unwrap();
+    cargo_pkg_name.to_string()
+}
+
+// convert from kabob case to snake case
+fn kabob_to_snake_case(s: String) -> String {
+    // convert from kabob case to lowercase snake case
+    let mut s = s.replace('-', "_");
+    s.make_ascii_lowercase();
+    s
 }
