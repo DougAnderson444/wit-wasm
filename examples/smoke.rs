@@ -1,24 +1,14 @@
 use anyhow::Result;
-
 use wasmtime::component::{Component, Linker};
 use wasmtime::{Config, Engine, Store};
-use wasmtime_wasi::preview2::wasi::command::add_to_linker;
+use wasmtime_wasi::preview2::wasi;
 use wasmtime_wasi::preview2::{Table, WasiCtx, WasiCtxBuilder, WasiView};
 
+// Use the WIT world named smoke at ./wit
 wasmtime::component::bindgen!({
     path: "wit",
     world: "smoke",
-    async: true,
-    // with: {
-    //    "wasi:io/streams": preview2::wasi::io::streams,
-    //    "wasi:filesystem/filesystem": preview2::wasi::filesystem::filesystem,
-    //    "wasi:cli-base/environment": preview2::wasi::cli_base::environment,
-    //    "wasi:cli-base/preopens": preview2::wasi::cli_base::preopens,
-    //    "wasi:cli-base/exit": preview2::wasi::cli_base::exit,
-    //    "wasi:cli-base/stdin": preview2::wasi::cli_base::stdin,
-    //    "wasi:cli-base/stdout": preview2::wasi::cli_base::stdout,
-    //    "wasi:cli-base/stderr": preview2::wasi::cli_base::stderr,
-    // },
+    async: true
 });
 
 lazy_static::lazy_static! {
@@ -32,27 +22,35 @@ lazy_static::lazy_static! {
     };
 }
 
+/// Struct to hold the data we want to pass in
+/// plus the WASI properties in order to use WASI
 pub struct MyImports {
     hit: bool,
+    wasi_ctx: Context,
+}
+
+struct Context {
     table: Table,
     wasi: WasiCtx,
 }
 
+// We need to impl to be able to use the WASI linker add_to_linker
 impl WasiView for MyImports {
     fn table(&self) -> &Table {
-        &self.table
+        &self.wasi_ctx.table
     }
     fn table_mut(&mut self) -> &mut Table {
-        &mut self.table
+        &mut self.wasi_ctx.table
     }
     fn ctx(&self) -> &WasiCtx {
-        &self.wasi
+        &self.wasi_ctx.wasi
     }
     fn ctx_mut(&mut self) -> &mut WasiCtx {
-        &mut self.wasi
+        &mut self.wasi_ctx.wasi
     }
 }
 
+/// Implementations of the host functions
 #[async_trait::async_trait]
 impl mypackage::smoke::imports::Host for MyImports {
     async fn thunk(&mut self, msg: String) -> Result<String> {
@@ -63,24 +61,16 @@ impl mypackage::smoke::imports::Host for MyImports {
     }
 }
 
-async fn instantiate(
+/// Helper function to abstract the instantiation of the WASM module
+/// [`Smoke`] is the name of the WIT world we're using
+pub async fn instantiate(
     component: Component,
     wasi_ctx: MyImports,
 ) -> Result<(Store<MyImports>, Smoke)> {
     let mut linker = Linker::new(&ENGINE);
 
     // add wasi io, filesystem, clocks, cli_base, random, poll
-    add_to_linker(&mut linker)?;
-
-    // All of the imports available to the world are provided by the wasi-common crate:
-    // preview2::wasi::filesystem::filesystem::add_to_linker(&mut linker, |x| x)?;
-    // preview2::wasi::io::streams::add_to_linker(&mut linker, |x| x)?;
-    // preview2::wasi::cli_base::environment::add_to_linker(&mut linker, |x| x)?;
-    // preview2::wasi::cli_base::preopens::add_to_linker(&mut linker, |x| x)?;
-    // preview2::wasi::cli_base::exit::add_to_linker(&mut linker, |x| x)?;
-    // preview2::wasi::cli_base::stdin::add_to_linker(&mut linker, |x| x)?;
-    // preview2::wasi::cli_base::stdout::add_to_linker(&mut linker, |x| x)?;
-    // preview2::wasi::cli_base::stderr::add_to_linker(&mut linker, |x| x)?;
+    wasi::command::add_to_linker(&mut linker)?;
 
     // link OUR imports
     Smoke::add_to_linker(&mut linker, |x| x)?;
@@ -98,7 +88,7 @@ async fn main() -> wasmtime::Result<()> {
 
     let start = std::time::Instant::now();
 
-    let component = Component::from_file(&ENGINE, format!("dist/{wasm}.wasm"))?;
+    let component = Component::from_file(&ENGINE, format!("dist/{wasm}.component.wasm"))?;
 
     // time to read file
     let last = start.elapsed();
@@ -113,8 +103,7 @@ async fn main() -> wasmtime::Result<()> {
         component,
         MyImports {
             hit: false,
-            table,
-            wasi,
+            wasi_ctx: Context { table, wasi },
         },
     )
     .await?;
