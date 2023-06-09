@@ -39,35 +39,36 @@ fn dist() -> Result<(), DynError> {
     // get the CARGO_PKG_NAME of the workspace root project (not this xtask project)
     let out_name = kabob_to_snake_case(get_workspace_pkg_name());
 
+    let target = "wasm32-wasi";
+
     // 2nd arg if available should be "release", if not release or not present, then set to "debug"
-    let target = match env::args().nth(2).unwrap_or_else(|| "debug".to_string()) {
+    let prof = match env::args().nth(2).unwrap_or_else(|| "debug".to_string()) {
         ref s if s == "release" => "release",
         _ => "debug",
     };
 
-    let profile = match target {
+    let profile = match prof {
         "release" => "--release",
         _ => "",
     };
 
     let cargo = env::var("CARGO").unwrap_or_else(|_| "cargo".to_string());
+    let args = match profile {
+        "" => vec!["build", "--target", target],
+        _ => vec!["build", "--target", target, profile],
+    };
     let status = Command::new(cargo)
         .current_dir(project_root())
-        .args(["build", profile, "--target", "wasm32-wasi"])
+        .args(args)
         .status()?;
 
     if !status.success() {
         Err("cargo build failed")?;
     }
 
-    let path: PathBuf = [
-        r"target",
-        "wasm32-wasi",
-        target,
-        &format!("{out_name}.wasm"),
-    ]
-    .iter()
-    .collect();
+    let path: PathBuf = [r"target", target, prof, &format!("{out_name}.wasm")]
+        .iter()
+        .collect();
 
     let src = project_root().join(path);
     eprintln!("Source Read: {:?}", src);
@@ -83,7 +84,7 @@ fn dist() -> Result<(), DynError> {
         .adapter("wasi_snapshot_preview1", &wasi_adapter)?
         .encode()?;
 
-    let dst = dist_dir().join(format!("{}.wasm", out_name));
+    let dst = dist_dir().join(format!("{}.component.wasm", out_name));
 
     std::fs::write(dst, wasm)?;
 
