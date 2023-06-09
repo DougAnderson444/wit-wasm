@@ -3,6 +3,9 @@
 ```bash
 $ cargo xtask dist
 
+# For release mode (smaller binary):
+$ cargo xtask dist release
+
 # 1. runs `cargo build --target wasm32-wasi`
 # 2. adapts wasm module to Component model using `wasi_snapshot_preview1`
 # 3. copies Component to dist folder for use
