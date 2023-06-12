@@ -20,7 +20,14 @@ crate-type = ["cdylib"]
 [dependencies]
 anyhow = "1.0"
 getrandom = { version = "0.2.10" }
-wit-component = "0.11.0"
+# wit-component = "0.11.0"
+
+# if target is wasm32-unknown-unknown but NOT wasm32-wasi, use getrandom with `js` feature
+[target.wasm32-unknown-unknown.dependencies]
+getrandom = { version = "0.2.10", features = ["js"] }
+
+[target.wasm32-wasi.dependencies]
+getrandom = { version = "0.2.10" }
 
 [dependencies.wit-bindgen]
 workspace = true
