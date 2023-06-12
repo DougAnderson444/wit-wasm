@@ -2,10 +2,21 @@ package mypackage:smoke
 
 interface imports {
   thunk: func(msg: string) -> string
+  prnt: func(msg: string)
+}
+
+interface demo {
+  thank: func(msg: string) -> string
 }
 
 world smoke {
   import imports
 
   export think: func(msg: string) -> string
+
+  export demo
+
+  export direct: interface {
+    pank: func()
+  }
 }

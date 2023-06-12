@@ -59,6 +59,11 @@ impl mypackage::smoke::imports::Host for MyImports {
         let new_msg = format!("{} ({})", msg, "from the host");
         Ok(new_msg)
     }
+
+    async fn prnt(&mut self, msg: String) -> Result<()> {
+        println!("in the host: {msg}");
+        Ok(())
+    }
 }
 
 /// Helper function to abstract the instantiation of the WASM module
@@ -121,6 +126,15 @@ async fn main() -> wasmtime::Result<()> {
         .await?;
 
     println!("{out}");
+
+    let thx = smoke_reactor
+        .mypackage_smoke_demo()
+        .call_thank(&mut store, "god")
+        .await?;
+
+    eprintln!("Wut: {thx}");
+
+    smoke_reactor.direct().call_pank(&mut store).await?;
 
     assert!(store.data().hit);
 
