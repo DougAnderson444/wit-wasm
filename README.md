@@ -23,14 +23,11 @@ $ cargo run --example smoke
 
 ## Use in Javascript
 
-`npm install @bytecodealliance/jco`
+This package also uses `jco` to build Javascript bindings for the component. See the [`xtask`](/xtask) readme for details.
 
-Blocker: jco needs to be updated to version `0xd`, see [#85](https://github.com/bytecodealliance/jco/issues/85)
+The JS bindings are found in `dist/js_bindings` and the use of the ESM export can be found in the [`jco` docs](https://github.com/bytecodealliance/jco).
 
-jco relies on older verisons, namely:
-
--   `wit-component` CURRENT_VERSION: u8 = 0x02;
--   `wasmparser` WASM_COMPONENT_VERSION: u16 = 0xc;
+These could be published to `npm` and used in a JS project.
 
 ### Refs:
 
