@@ -25,9 +25,23 @@ $ cargo run --example smoke
 
 This package also uses `jco` to build Javascript bindings for the component. See the [`xtask`](/xtask) readme for details.
 
-The JS bindings are found in `dist/js_bindings` and the use of the ESM export can be found in the [`jco` docs](https://github.com/bytecodealliance/jco).
+The JS bindings are found in `dist/js` and the use of the ESM export can be found in the [`jco` docs](https://github.com/bytecodealliance/jco).
 
-These could be published to `npm` and used in a JS project.
+Just like in Rust, you'll need to create a `package` that creates any `imports` used in the `wasm`.
+
+For example, for a world called `smoke` create a package in javascript and import the `smoke` component:
+
+```json
+// javascript/package.json
+// ...
+	"dependencies": {
+		"@bytecodealliance/preview2-shim": "^0.0.9", // <-- required for preview2
+		"smoke": "file:../js-smoke" // <-- write your fns, import the component package
+	}
+// ...
+```
+
+Once your import functions are written and depended upon, the wasm can use it in its calls.
 
 ### Refs:
 

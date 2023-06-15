@@ -16,11 +16,13 @@ let wasm = ComponentEncoder::default()
         .encode()?;
 ```
 
-3. Uses `transpile` to generate the JS bindings for the wasm _component_ in Step 2, see details below if you dare...
+3. Next, use `jco transpile` to generate the JS bindings for the wasm _component_ generated in Step 2. Spawns the command, but alternatively could be done in Rust (it's slower that way, plus it is missing the prepend step).
 
-## Transpile Build of `js_component_bindgen.component.wasm`
+## Transpile Build of `js_component_bindgen.component.wasm` in Rust (Not recomnended)
 
-There is a lot in Step #3 above. This xtask uses the WebAssembly Component `js_component_bindgen.component.wasm` to build JS WebAssembly Component bindings!
+**Deprecated**. Use the javascript command instead `jco transpile` instead.
+
+There is a lot in Step #3 above if you want to do it n Rust. This xtask can use the WebAssembly Component `js_component_bindgen.component.wasm` to build JS WebAssembly Component bindings!
 
 ### Overview
 
