@@ -13,13 +13,11 @@ edition = "2021"
 # //                      allows for `(import (interface "...") ...)` syntax.
 # pub(crate) const WASM_COMPONENT_VERSION: u16 = 0xd;
 # [`jco`] currently only can handle version 0xc, so set wit-component back to then
-wit-component = "0.11.0"                                                       # { git = "https://github.com/bytecodealliance/wasm-tools"}
+wit-component = "0.11.0"                                                       # Creates and encodes the component
 toml = "0.7.4"
-js-component-bindgen = { git = "https://github.com/bytecodealliance/jco.git" }
+js-component-bindgen = { git = "https://github.com/bytecodealliance/jco.git" } # Creates the JS bindings
 lazy_static = { workspace = true }
-wasmtime-wasi = { workspace = true }
+wasmtime-wasi = { workspace = true }                                           # For the wasm preview2 adpater
 anyhow = { workspace = true }
-tokio = { workspace = true }
-
-[dependencies.wasmtime]
-workspace = true
+tokio = { workspace = true }                                                   # async runtime
+wasmtime = { workspace = true }                                                # Wasm runtime Loads our component
