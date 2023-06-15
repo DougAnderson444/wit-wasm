@@ -1,4 +1,4 @@
-use super::{dist_dir, project_root, xtask_root};
+use super::{project_root, xtask_root};
 use anyhow::Result;
 use wasmtime::component::{Component, Linker};
 use wasmtime::{Config, Engine, Store};
@@ -63,8 +63,8 @@ pub async fn instantiate(
     Ok((store, reactor))
 }
 
-pub async fn transpile(wasm: &[u8], out_name: String, out_dir: String) -> Result<()> {
-    eprintln!("Transpiling... ");
+pub async fn transpile(wasm: &[u8], out_name: &String, out_dir: &String) -> Result<()> {
+    eprintln!("Transpiling... this may take a minute or two...");
 
     let component = Component::from_file(
         &ENGINE,
@@ -101,13 +101,13 @@ pub async fn transpile(wasm: &[u8], out_name: String, out_dir: String) -> Result
             for (name, file) in files {
                 // make `out_dir/name` directory if it doesn't exist
                 std::fs::create_dir_all(
-                    dist_dir()
+                    project_root()
                         .join(out_dir.clone())
                         .join(name.clone())
                         .parent()
                         .unwrap(),
                 )?;
-                std::fs::write(dist_dir().join(out_dir.clone()).join(name), file)?;
+                std::fs::write(project_root().join(out_dir.clone()).join(name), file)?;
             }
         }
         Err(err) => {
