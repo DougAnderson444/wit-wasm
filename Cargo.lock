@@ -2199,18 +2199,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "witx"
-version = "0.9.1"
-source = "git+https://github.com/bytecodealliance/wasmtime#46826c62735dc22cc512fd5d23aa702a92e8a364"
-dependencies = [
- "anyhow",
- "log",
- "thiserror",
- "wast 35.0.2",
-]
-
-[[package]]
-name = "xtask"
+name = "wit-wasm-xtask"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -2221,6 +2210,17 @@ dependencies = [
  "wasmtime",
  "wasmtime-wasi",
  "wit-component",
+]
+
+[[package]]
+name = "witx"
+version = "0.9.1"
+source = "git+https://github.com/bytecodealliance/wasmtime#46826c62735dc22cc512fd5d23aa702a92e8a364"
+dependencies = [
+ "anyhow",
+ "log",
+ "thiserror",
+ "wast 35.0.2",
 ]
 
 [[package]]
