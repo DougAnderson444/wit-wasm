@@ -23,7 +23,7 @@ impl exports::mypackage::smoke::demo::Demo for Exports {
 
 impl exports::direct::Direct for Exports {
     fn pank() {
-        mypackage::smoke::imports::prnt("print who?");
+        mypackage::smoke::imports::prnt("using prnt from rust in pank");
     }
 }
 
