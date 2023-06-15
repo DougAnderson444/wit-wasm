@@ -10,6 +10,17 @@ resolver = "2"
 [workspace.package]
 edition = "2021"
 
+[workspace.dependencies]
+lazy_static = "1.4.0"
+wasmtime-wasi = { git = "https://github.com/bytecodealliance/wasmtime" } # has wasi linker too
+anyhow = "1.0"
+tokio = { version = "1.11.0", features = ["rt", "macros"] }
+
+[workspace.dependencies.wasmtime]
+version = "11"
+features = ["component-model"]
+git = 'https://github.com/bytecodealliance/wasmtime'
+
 [workspace.dependencies.wit-bindgen]
 git = "https://github.com/bytecodealliance/wit-bindgen"
 version = "0.7.0"
@@ -18,7 +29,7 @@ version = "0.7.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-anyhow = "1.0"
+anyhow = { workspace = true }
 getrandom = { version = "0.2.10" }
 # wit-component = "0.11.0"
 
@@ -33,14 +44,12 @@ getrandom = { version = "0.2.10" }
 workspace = true
 
 [dev-dependencies.wasmtime]
-version = "11"
-features = ["component-model"]
-git = 'https://github.com/bytecodealliance/wasmtime'
+workspace = true
 
 [dev-dependencies]
-wasmtime-wasi = { git = "https://github.com/bytecodealliance/wasmtime" } # has wasi linker too
-lazy_static = "1.4.0"
-tokio = { version = "1.11.0", features = ["rt", "macros"] }
+wasmtime-wasi = { workspace = true }
+lazy_static = { workspace = true }
+tokio = { workspace = true }
 async-trait = "0.1.68"
 
 # [patch.crates-io]

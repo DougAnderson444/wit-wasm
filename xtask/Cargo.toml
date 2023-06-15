@@ -6,5 +6,20 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wit-component = "0.11.0" # { git = "https://github.com/bytecodealliance/wasm-tools"}
+# // * [????-??-??] 0xa - original version
+# // * [2023-01-05] 0xb - `export` introduces an alias
+# // * [2023-02-06] 0xc - `export` has an optional type ascribed to it
+# // * [2023-05-10] 0xd - imports/exports drop URLs, new discriminator byte which
+# //                      allows for `(import (interface "...") ...)` syntax.
+# pub(crate) const WASM_COMPONENT_VERSION: u16 = 0xd;
+# [`jco`] currently only can handle version 0xc, so set wit-component back to then
+wit-component = "0.11.0"                                                       # { git = "https://github.com/bytecodealliance/wasm-tools"}
 toml = "0.7.4"
+js-component-bindgen = { git = "https://github.com/bytecodealliance/jco.git" }
+lazy_static = { workspace = true }
+wasmtime-wasi = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+
+[dependencies.wasmtime]
+workspace = true
