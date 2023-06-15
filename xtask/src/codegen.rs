@@ -79,15 +79,15 @@ pub async fn transpile(wasm: &[u8], out_name: &String, out_dir: &String) -> Resu
     let (mut store, reactor) = instantiate(component, Wassup { table, wasi }).await?;
 
     let options: GenerateOptions = GenerateOptions {
-        name: &[&out_name, ".component"].concat(),
+        name: &[out_name, ".component"].concat(),
         instantiation: None,
         no_typescript: None,
         map: None,
         compat: None,
-        no_nodejs_compat: None,
+        no_nodejs_compat: Some(true),
         base64_cutoff: None,
-        tla_compat: None,
-        valid_lifting_optimization: None,
+        tla_compat: Some(true), // without top level await support
+        valid_lifting_optimization: Some(true), // optimization to reduce code size
     };
 
     eprintln!("Calling generate... ");
