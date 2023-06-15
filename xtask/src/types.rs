@@ -3,6 +3,7 @@ pub struct DistConfig {
     pub target: Target,
     pub profile: Profile,
     pub dist_dir: String,
+    pub js_out_dir: String,
 }
 
 /// Choose some sane defaults
@@ -12,16 +13,18 @@ impl Default for DistConfig {
             target: Target::Wasi,
             profile: Profile::Release,
             dist_dir: "dist".to_string(),
+            js_out_dir: "dist/js".to_string(),
         }
     }
 }
 
 impl DistConfig {
-    pub fn new(target: Target, profile: Profile, dist_dir: String) -> Self {
+    pub fn new(target: Target, profile: Profile, dist_dir: String, js_out_dir: String) -> Self {
         Self {
             target,
             profile,
             dist_dir,
+            js_out_dir,
         }
     }
 }

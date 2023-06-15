@@ -85,12 +85,18 @@ pub async fn dist(config: &DistConfig) -> Result<(), DynError> {
         .encode()?;
 
     let dst = dist_dir().join(format!("{}.component.wasm", out_name));
+    std::fs::write(dst.clone(), wasm)?;
 
-    // first, also generate js bindings
-    let out = [&config.dist_dir, "/js_bindings"].concat();
-    codegen::transpile(&wasm, &out_name, &out).await?;
+    // codegen::transpile(&wasm, &out_name, &out).await?; // broken, doesn't prepend `@bytecodealliance/preview2-shim/...` to imports in generated files
 
-    std::fs::write(dst, wasm)?;
+    // This is faster than `codegen::transpile`: run Command: `jco transpile `dst` (as string) -o js`
+    // windows needs to append `.cmd` to `jco` command
+    // check if os is Windows, https://doc.rust-lang.org/reference/conditional-compilation.html
+    let jco_cmd = if cfg!(windows) { "jco.cmd" } else { "jco" };
+    let _status = Command::new(jco_cmd)
+        .current_dir(project_root())
+        .args(["transpile", dst.to_str().unwrap(), "-o", &config.js_out_dir])
+        .status()?;
 
     Ok(())
 }

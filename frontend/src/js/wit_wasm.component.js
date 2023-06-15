@@ -1,7 +1,7 @@
-import { cliBaseEnvironment as interface14, cliBaseExit as interface1, cliBasePreopens as interface9, cliBaseStderr as interface4, cliBaseStdin as interface2, cliBaseStdout as interface3 } from 'cli-base';
-import { filesystemFilesystem as interface0 } from 'filesystem';
-import { ioStreams as interface5 } from 'io';
-import { randomRandom as interface13 } from 'random';
+import { cliBaseEnvironment as interface14, cliBaseExit as interface1, cliBasePreopens as interface9, cliBaseStderr as interface4, cliBaseStdin as interface2, cliBaseStdout as interface3 } from '@bytecodealliance/preview2-shim/cli-base';
+import { filesystemFilesystem as interface0 } from '@bytecodealliance/preview2-shim/filesystem';
+import { ioStreams as interface5 } from '@bytecodealliance/preview2-shim/io';
+import { randomRandom as interface13 } from '@bytecodealliance/preview2-shim/random';
 import { smokeImports as interface7 } from 'smoke';
 
 const base64Compile = str => WebAssembly.compile(typeof Buffer !== 'undefined' ? Buffer.from(str, 'base64') : Uint8Array.from(atob(str), b => b.charCodeAt(0)));

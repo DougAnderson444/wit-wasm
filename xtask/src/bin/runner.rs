@@ -16,6 +16,7 @@ async fn main() {
         target: Target::Wasi,
         profile,
         dist_dir: "dist".to_string(),
+        js_out_dir: "frontend/src/js".to_string(),
     };
 
     if let Err(e) = try_main(&task, &config).await {
