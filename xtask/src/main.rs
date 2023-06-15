@@ -7,17 +7,20 @@ use wit_component::ComponentEncoder;
 
 type DynError = Box<dyn std::error::Error>;
 
-fn main() {
-    if let Err(e) = try_main() {
+mod codegen;
+
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    if let Err(e) = try_main().await {
         eprintln!("{}", e);
         std::process::exit(-1);
     }
 }
 
-fn try_main() -> Result<(), DynError> {
+async fn try_main() -> Result<(), DynError> {
     let task = env::args().nth(1);
     match task.as_deref() {
-        Some("dist") => dist()?,
+        Some("dist") => dist().await?,
         _ => print_help(),
     }
     Ok(())
@@ -32,7 +35,7 @@ dist [release]           builds application and adapts wasm module to component 
     )
 }
 
-fn dist() -> Result<(), DynError> {
+async fn dist() -> Result<(), DynError> {
     let _ = fs::remove_dir_all(dist_dir());
     fs::create_dir_all(dist_dir())?;
 
@@ -85,6 +88,9 @@ fn dist() -> Result<(), DynError> {
         .encode()?;
 
     let dst = dist_dir().join(format!("{}.component.wasm", out_name));
+
+    // first, also generate js bindings
+    codegen::transpile(&wasm, out_name, "js_bindings".to_string()).await?;
 
     std::fs::write(dst, wasm)?;
 
