@@ -1,0 +1,11 @@
+{
+  "name": "smoke",
+  "version": "1.0.0",
+  "description": "Imports for the js-smoke usage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Doug Anderson",
+  "license": "MIT"
+}
