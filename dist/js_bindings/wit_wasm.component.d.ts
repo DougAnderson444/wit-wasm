@@ -1,0 +1,16 @@
+import { CliBaseEnvironment as CliBaseEnvironmentImports } from './imports/cli-base-environment';
+import { CliBasePreopens as CliBasePreopensImports } from './imports/cli-base-preopens';
+import { CliBaseExit as CliBaseExitImports } from './imports/cli-base-exit';
+import { CliBaseStdin as CliBaseStdinImports } from './imports/cli-base-stdin';
+import { CliBaseStdout as CliBaseStdoutImports } from './imports/cli-base-stdout';
+import { CliBaseStderr as CliBaseStderrImports } from './imports/cli-base-stderr';
+import { FilesystemFilesystem as FilesystemFilesystemImports } from './imports/filesystem-filesystem';
+import { IoStreams as IoStreamsImports } from './imports/io-streams';
+import { RandomRandom as RandomRandomImports } from './imports/random-random';
+import { SmokeImports as SmokeImportsImports } from './imports/smoke-imports';
+import { SmokeDemo as SmokeDemoExports } from './exports/smoke-demo';
+import { Direct as DirectExports } from './exports/direct';
+export const smokeDemo: typeof SmokeDemoExports;
+export const direct: typeof DirectExports;
+export const demo: typeof SmokeDemoExports;
+export function think(msg: string): string;
